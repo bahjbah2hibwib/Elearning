@@ -5,11 +5,9 @@ spring:
     password: 123
   sql:
     init:
-      mode: always # Luôn chạy file schema.sql khi khởi động dự án
+      mode: always
   jpa:
     hibernate:
-      # Vì ta đã tự viết SQL tạo bảng, nên để 'validate' để Hibernate kiểm tra xem
-      # Model Java và Bảng dưới DB có khớp nhau không (tránh bị ghi đè lung tung)
       ddl-auto: validate
     show-sql: true
     properties:
