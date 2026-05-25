@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS elearningmanagerment.users(
                                            updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                            CONSTRAINT chk_date_of_birth
                                                CHECK (date_of_birth <= CURRENT_DATE - INTERVAL '16 years'),
-    CONSTRAINT chk_user_role CHECK ( role IN ( 'ROLE_STUDENT', 'ROLE_INSTRUCTOR','ROLE_ADMIN') )
+                                           CONSTRAINT chk_user_role CHECK ( role IN ( 'ROLE_STUDENT', 'ROLE_INSTRUCTOR','ROLE_ADMIN') )
 );
 
 CREATE TABLE IF NOT EXISTS elearningmanagerment.courses(
