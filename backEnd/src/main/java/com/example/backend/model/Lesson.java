@@ -21,9 +21,6 @@ public class Lesson extends BaseEntity{
     @Column( name = "lesson_id")
     private Integer lessonId;
 
-    @Column(name = "course_id", nullable = false)
-    private Integer courseId;
-
     @Column(nullable = false, length = 255)
     private String title;
 

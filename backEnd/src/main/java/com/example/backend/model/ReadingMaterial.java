@@ -18,9 +18,6 @@ public class ReadingMaterial extends BaseEntity {
     @Column(name = "material_id", nullable = false)
     private Integer materialId;
 
-    @Column(name = "lesson_id", nullable = false)
-    private Integer lessonId;
-
     @Column(nullable = false, length = 255)
     private String title;
 

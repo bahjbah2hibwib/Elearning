@@ -17,9 +17,6 @@ public class Video {
     @Column(name = "video_id", nullable = false)
     private Integer videoId;
 
-    @Column(name = "lesson_id", nullable = false)
-    private Integer lessonId;
-
     @Column(name = "video_type", nullable = false, length = 20)
     private String videoType;
 
