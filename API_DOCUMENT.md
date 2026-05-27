@@ -3,11 +3,14 @@
 ## 1. PHÂN HỆ AUTHENTICATION (MODULE A)
 
 ### 📝 API 01: ĐĂNG KÝ TÀI KHOẢN (REGISTER)
+
 * **Endpoint:** `POST /api/v1/auth/register`
 * **Content-Type:** `application/json`
 * **Auth Required:** `None (Public)`
 
 #### A. Request Specifications (Dữ liệu đầu vào)
+
+
 | Field Name | Type | Required | Validation Rules | Description |
 | :--- | :--- | :--- | :--- | :--- |
 | `fullName` | String | Yes | Not Blank, Max 100 chars | Họ và tên người dùng |
@@ -24,20 +27,20 @@
   "phone": "0987654321"
 }
 ```
-B. Business Logic & Step-by-Step Processing
-Hệ thống tiếp nhận Request, thực hiện validate dữ liệu đầu vào theo quy tắc ở mục A.
 
-Kiểm tra tính duy nhất của email bằng userRepository.existsByEmail(email). Nếu đã tồn tại (true), ném lỗi EmailAlreadyExistsException (Trả về HTTP 400 Bad Request).
+#### B. Business Logic & Step-by-Step Processing
 
-Tiến hành mã hóa mật khẩu thô nhận được bằng thuật toán BCryptPasswordEncoder.
+1. **Validate dữ liệu:** Hệ thống tiếp nhận Request, thực hiện validate dữ liệu đầu vào theo quy tắc ở mục A.
+2. **Kiểm tra trùng lặp:** Kiểm tra tính duy nhất của email bằng `userRepository.existsByEmail(email)`. Nếu đã tồn tại (`true`), ném lỗi `EmailAlreadyExistsException` (Trả về HTTP 400 Bad Request).
+3. **Mã hóa mật khẩu:** Tiến hành mã hóa mật khẩu thô nhận được bằng thuật toán `BCryptPasswordEncoder`.
+4. **Khởi tạo dữ liệu:** Tạo thực thể User mới với `role = 'ROLE_STUDENT'` và `status = true (ACTIVE)`.
+5. **Lưu dữ liệu:** Thực hiện lưu thông tin xuống database qua `userRepository.save(user)`.
 
-Tạo thực thể User mới với role = 'ROLE_STUDENT' và status = true (ACTIVE).
+#### C. Response Specifications (Dữ liệu đầu ra)
 
-Thực hiện lưu thông tin xuống database qua userRepository.save(user).
+🟢 **Case 1: Success (HTTP Status 201 Created)**
 
-C. Response Specifications (Dữ liệu đầu ra)
-🟢 Case 1: Success (HTTP Status 201 Created)
-JSON
+```json
 {
   "success": true,
   "message": "User registered successfully",
@@ -51,10 +54,14 @@ JSON
     "createdAt": "2026-05-27T23:15:00"
   }
 }
-🔴 Case 2: Email Already Exists (HTTP Status 400 Bad Request)
-JSON
+```
+
+🔴 **Case 2: Email Already Exists (HTTP Status 400 Bad Request)**
+
+```json
 {
   "success": false,
   "errorCode": "EMAIL_ALREADY_EXISTS",
   "message": "Địa chỉ email người dùng đăng ký đã tồn tại trước đó!"
 }
+```
