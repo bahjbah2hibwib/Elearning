@@ -65,3 +65,66 @@
   "message": "Địa chỉ email người dùng đăng ký đã tồn tại trước đó!"
 }
 ```
+
+### 📝 API 02: ĐĂNG NHẬP HỆ THỐNG (LOGIN)
+
+* **Endpoint:** `POST /api/v1/auth/login`
+* **Content-Type:** `application/json`
+* **Auth Required:** `None (Public)`
+
+#### A. Request Specifications (Dữ liệu đầu vào)
+
+
+| Field Name | Type | Required | Validation Rules | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `email` | String | Yes | Format: Email | Email dùng để đăng nhập |
+| `password` | String | Yes | Not Blank | Mật khẩu của tài khoản |
+
+**Example Request Body:**
+```json
+{
+  "email": "vna@gmail.com",
+  "password": "SecurePassword123"
+}
+```
+
+#### B. Business Logic & Step-by-Step Processing
+
+1. **Tìm kiếm người dùng:** Tìm kiếm bản ghi dữ liệu người dùng tương ứng dựa vào email thông qua `userRepository.findByEmail(email)`. Nếu không tìm thấy, lập tức ném lỗi xác thực `BadCredentialsException` (Trả về HTTP 401 Unauthorized).
+2. **Kiểm tra trạng thái:** Nếu tìm thấy người dùng, kiểm tra trạng thái tài khoản. Nếu `status == false` (Tài khoản bị khóa), lập tức ném lỗi `AccountLockedException` (Trả về HTTP 403 Forbidden).
+3. **Đối sánh mật khẩu:** Sử dụng hàm `BCryptPasswordEncoder.matches()` để đối sánh mật khẩu thô gửi lên và mật khẩu băm trong DB. Nếu không trùng, ném lỗi `BadCredentialsException` (Trả về HTTP 401 Unauthorized).
+4. **Sinh mã xác thực:** Khi tất cả các bước kiểm tra thành công, gọi thư viện mã hóa Token JWT để sinh chuỗi Access Token mới chứa thông tin `userId`, `email`, và `roles`.
+
+#### C. Response Specifications (Dữ liệu đầu ra)
+
+🟢 **Case 1: Success (HTTP Status 200 OK)**
+
+```json
+{
+  "success": true,
+  "message": "Login successfully",
+  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoidm5hQGdtYWlsLmNvbSIsInJvbGVzIjpbIlJPTEVfU1RVREVOVCJdfQ...",
+  "tokenType": "Bearer",
+  "expiresIn": 86400
+}
+```
+
+🔴 **Case 2: Wrong Credentials (HTTP Status 401 Unauthorized)**
+
+```json
+{
+  "success": false,
+  "errorCode": "BAD_CREDENTIALS",
+  "message": "Thông tin xác thực danh tính không chính xác (Sai email hoặc mật khẩu đăng nhập)."
+}
+```
+
+🔴 **Case 3: Account Locked (HTTP Status 403 Forbidden)**
+
+```json
+{
+  "success": false,
+  "errorCode": "ACCOUNT_LOCKED",
+  "message": "Tài khoản người dùng đang trong trạng thái bị khóa do vi phạm chính sách hệ thống."
+}
+```
