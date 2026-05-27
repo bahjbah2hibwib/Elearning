@@ -523,6 +523,7 @@ Optional<User> findById(Integer id);
   "success": true,
   "message": "Account unlocked successfully"
 }
+```
 
 ## 3. PHÂN HỆ KHÓA HỌC TRỰC TUYẾN (MODULE C)
 
@@ -636,6 +637,8 @@ Optional<Course> findById(Integer courseId);
   "errorCode": "ACCESS_DENIED",
   "message": "Bạn không có quyền hạn vai trò để truy cập thông tin khóa học nội bộ này!"
 }
+```
+
 📝 API 12: GIẢNG VIÊN TẠO KHÓA HỌC MỚI TRONG HỆ THỐNGEndpoint: POST /api/v1/coursesContent-Type: application/jsonAuth Required: Tài khoản có quyền giảng viên hệ thống ROLE_INSTRUCTORA. Request Specifications (Dữ liệu đầu vào từ Request Body)Field NameTypeRequiredValidation RulesDescriptiontitleStringYesNot Blank, độ dài từ 10 đến 150 ký tựTiêu đề khóa học mớidescriptionStringYesNot BlankMô tả chi tiết nội dung khóa họcthumbnailUrlStringYesFormat: URLĐường dẫn ảnh đại diện hiển thị của khóa họcExample Request:JSON{
   "title": "Cấu trúc dữ liệu và Giải thuật cơ bản",
   "description": "Khóa học cung cấp kiến thức chuyên sâu về danh sách liên kết, cây, đồ thị...",
@@ -818,6 +821,7 @@ List<Course> findByInstructor_UserId(Integer instructorId);
     }
   ]
 }
+```
 
 ## 4. PHÂN HỆ BÀI HỌC VÀ TIẾN ĐỘ HỌC TẬP (MODULE D & F)
 
